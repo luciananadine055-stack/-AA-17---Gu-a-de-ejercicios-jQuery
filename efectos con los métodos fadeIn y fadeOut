@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efectos fadeIn y fadeOut en jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            text-align: center;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .bloque-principal {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            border: 3px solid #2d3436;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            opacity: 1;
+        }
+        
+        .bloque-principal:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+        }
+        
+        .bloque-secundario {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            border: 3px solid #2d3436;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            color: white;
+            opacity: 0;
+            display: none;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        .bloque-principal h2, .bloque-secundario h2 {
+            margin-top: 0;
+            text-align: center;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 15px;
+        }
+        
+        .parrafo {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .instrucciones {
+            background-color: #fff3cd;
+            border: 2px dashed #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .info-panel {
+            background-color: #e8f4fc;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .estado-bloques {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .estado-bloque {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            min-width: 150px;
+            border-top: 4px solid #3498db;
+            text-align: center;
+        }
+        
+        .estado-bloque h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+        
+        .estado-bloque .estado {
+            font-size: 18px;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 6px;
+        }
+        
+        .estado-activo {
+            background-color: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        
+        .estado-inactivo {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+        
+        .estadisticas {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .estadistica-card {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            min-width: 120px;
+            border-top: 4px solid #74b9ff;
+            text-align: center;
+        }
+        
+        .estadistica-card h3 {
+            margin: 0 0 8px 0;
+            color: #2c3e50;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        
+        .estadistica-card .numero {
+            font-size: 24px;
+            font-weight: bold;
+            color: #74b9ff;
+        }
+        
+        .codigo-ejemplo {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            text-align: left;
+            overflow-x: auto;
+        }
+        
+        .controles {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .boton-control {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .boton-control:hover {
+            background: linear-gradient(135deg, #27ae60, #219653);
+            transform: translateY(-2px);
+        }
+        
+        .boton-reset {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .boton-reset:hover {
+            background: linear-gradient(135deg, #c0392b, #a93226);
+        }
+        
+        .animacion-info {
+            text-align: center;
+            margin: 15px 0;
+            font-style: italic;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .barra-progreso {
+            width: 100%;
+            height: 6px;
+            background-color: rgba(255,255,255,0.3);
+            border-radius: 3px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .progreso {
+            height: 100%;
+            background: linear-gradient(90deg, #fff, #ffeaa7);
+            width: 0%;
+            transition: width 0.1s ease;
+            border-radius: 3px;
+        }
+        
+        .explicacion-efecto {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #fd79a8;
+        }
+        
+        .comparacion-efectos {
+            display: flex;
+            justify-content: space-around;
+            margin: 25px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        
+        .efecto-ejemplo {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            min-width: 200px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Efectos fadeIn y fadeOut en jQuery</h1>
+        <p class="subtitle">Transiciones suaves por decoloración (opacidad)</p>
+        
+        <div class="instrucciones">
+            <h3>🎯 Instrucciones:</h3>
+            <p>Haz clic en el <strong>bloque azul</strong> para verlo desaparecer gradualmente (fadeOut).</p>
+            <p>Cuando esté completamente oculto, aparecerá el <strong>bloque rosa</strong> gradualmente (fadeIn).</p>
+            <p>Observa cómo la opacidad cambia suavemente en lugar de ocultarse/mostrarse abruptamente.</p>
+        </div>
+        
+        <div class="explicacion-efecto">
+            <h4>💡 ¿En qué se diferencia fade de show/hide?</h4>
+            <p><strong>show()/hide()</strong>: Cambian las dimensiones del elemento (ancho/alto).</p>
+            <p><strong>fadeIn()/fadeOut()</strong>: Cambian solo la opacidad (transparencia), manteniendo el espacio.</p>
+        </div>
+        
+        <div class="estado-bloques">
+            <div class="estado-bloque">
+                <h3>Bloque Principal</h3>
+                <div class="estado estado-activo" id="estadoPrincipal">VISIBLE</div>
+                <div style="margin-top: 10px; font-size: 12px;">Opacidad: <span id="opacidadPrincipal">100%</span></div>
+            </div>
+            <div class="estado-bloque">
+                <h3>Bloque Secundario</h3>
+                <div class="estado estado-inactivo" id="estadoSecundario">OCULTO</div>
+                <div style="margin-top: 10px; font-size: 12px;">Opacidad: <span id="opacidadSecundaria">0%</span></div>
+            </div>
+        </div>
+        
+        <div class="bloque-principal" id="bloquePrincipal">
+            <h2>🌊 Bloque Principal</h2>
+            <div class="barra-progreso">
+                <div class="progreso" id="progresoPrincipal"></div>
+            </div>
+            <p class="parrafo">Este bloque utiliza el efecto <strong>fadeOut</strong> que gradualmente reduce la opacidad hasta hacerse completamente transparente.</p>
+            <p class="parrafo">A diferencia de hide(), el elemento mantiene su espacio en el layout durante toda la animación.</p>
+            <p class="parrafo">Observa cómo el texto se va haciendo más tenue hasta desaparecer por completo.</p>
+            <p class="parrafo">El efecto de decoloración crea una experiencia visual más suave y profesional.</p>
+            <div class="animacion-info">✨ Haz clic aquí para activar fadeOut</div>
+        </div>
+        
+        <div class="bloque-secundario" id="bloqueSecundario">
+            <h2>🎭 Bloque Revelado</h2>
+            <div class="barra-progreso">
+                <div class="progreso" id="progresoSecundario"></div>
+            </div>
+            <p class="parrafo">¡Este bloque apareció usando <strong>fadeIn</strong>! La opacidad aumentó gradualmente de 0% a 100%.</p>
+            <p class="parrafo">El efecto fadeIn es perfecto para revelar contenido de manera elegante y no intrusiva.</p>
+            <p class="parrafo">Mientras se ejecuta fadeIn, el elemento pasa de ser completamente transparente a completamente opaco.</p>
+            <p class="parrafo">Esta técnica es ampliamente utilizada en interfaces modernas para transiciones suaves.</p>
+            <div class="animacion-info">🎉 ¡Contenido revelado con fadeIn!</div>
+        </div>
+        
+        <div class="controles">
+            <button class="boton-control" id="btnReiniciar">Reiniciar Efectos</button>
+            <button class="boton-control" id="btnAlternar">Alternar Efectos</button>
+            <button class="boton-control" id="btnCambiarVelocidad">Velocidad: <span id="velocidadActual">Normal</span></button>
+        </div>
+        
+        <div class="info-panel">
+            <h3>📊 Información de los Efectos Fade:</h3>
+            <div class="estadisticas">
+                <div class="estadistica-card">
+                    <h3>Transiciones</h3>
+                    <div class="numero" id="contadorTransiciones">0</div>
+                </div>
+                <div class="estadistica-card">
+                    <h3>Duración</h3>
+                    <div class="numero" id="duracionFade">1000</div>
+                    <small>ms</small>
+                </div>
+                <div class="estadistica-card">
+                    <h3>Estado</h3>
+                    <div class="numero" id="estadoAnimacion">ESPERANDO</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparacion-efectos">
+            <div class="efecto-ejemplo">
+                <h4>fadeOut()</h4>
+                <p>Reduce opacidad de 1 a 0</p>
+                <p>Mantiene espacio ocupado</p>
+                <p>Efecto de desvanecimiento</p>
+            </div>
+            <div class="efecto-ejemplo">
+                <h4>fadeIn()</h4>
+                <p>Aumenta opacidad de 0 a 1</p>
+                <p>Revela contenido gradual</p>
+                <p>Transición suave</p>
+            </div>
+            <div class="efecto-ejemplo">
+                <h4>fadeToggle()</h4>
+                <p>Alterna entre fadeIn/fadeOut</p>
+                <p>Útil para botones</p>
+                <p>Mismo efecto reversible</p>
+            </div>
+        </div>
+        
+        <div class="codigo-ejemplo">
+            <h4>🔧 Código jQuery - Métodos fadeIn() y fadeOut():</h4>
+            <pre>
+// Efecto fadeOut en el bloque principal
+$('#bloquePrincipal').fadeOut(1000, function() {
+    // Callback que se ejecuta CUANDO fadeOut se completa
+    $('#estadoPrincipal').text('OCULTO');
+    $('#opacidadPrincipal').text('0%');
+    
+    // Efecto fadeIn en el bloque secundario
+    $('#bloqueSecundario').fadeIn(1000, function() {
+        // Callback que se ejecuta CUANDO fadeIn se completa
+        $('#estadoSecundario').text('VISIBLE');
+        $('#opacidadSecundaria').text('100%');
+    });
+});
+
+// Reiniciar efectos
+function reiniciarEfectos() {
+    $('#bloqueSecundario').stop().fadeOut(0);
+    $('#bloquePrincipal').stop().fadeIn(0);
+}
+
+// Uso de fadeToggle (alternar)
+$('#elemento').fadeToggle(1000); // Alterna entre fadeIn y fadeOut
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            let contadorTransiciones = 0;
+            let duracionFade = 1000;
+            let animacionEnCurso = false;
+            let velocidades = [
+                {nombre: "Rápido", valor: 500},
+                {nombre: "Normal", valor: 1000},
+                {nombre: "Lento", valor: 2000},
+                {nombre: "Muy Lento", valor: 3000}
+            ];
+            let velocidadIndex = 1;
+            
+            // Función para actualizar la barra de progreso
+            function actualizarProgreso(elemento, porcentaje) {
+                $(elemento).css('width', porcentaje + '%');
+            }
+            
+            // Función para iniciar la animación fade
+            function iniciarFade() {
+                if (animacionEnCurso) return;
+                
+                animacionEnCurso = true;
+                $('#estadoAnimacion').text('FADEOUT...');
+                
+                // Resetear barras de progreso
+                actualizarProgreso('#progresoPrincipal', 0);
+                actualizarProgreso('#progresoSecundario', 0);
+                
+                // Simular progreso durante fadeOut
+                let progreso = 0;
+                const intervalo = setInterval(() => {
+                    progreso += (100 / (duracionFade / 50));
+                    if (progreso >= 100) {
+                        clearInterval(intervalo);
+                        progreso = 100;
+                    }
+                    actualizarProgreso('#progresoPrincipal', progreso);
+                    $('#opacidadPrincipal').text(Math.floor(100 - progreso) + '%');
+                }, 50);
+                
+                // Efecto fadeOut en el bloque principal
+                $('#bloquePrincipal').fadeOut(duracionFade, function() {
+                    clearInterval(intervalo);
+                    
+                    $('#estadoPrincipal')
+                        .text('OCULTO')
+                        .removeClass('estado-activo')
+                        .addClass('estado-inactivo');
+                    
+                    $('#estadoAnimacion').text('FADEIN...');
+                    
+                    // Simular progreso durante fadeIn
+                    let progresoIn = 0;
+                    const intervaloIn = setInterval(() => {
+                        progresoIn += (100 / (duracionFade / 50));
+                        if (progresoIn >= 100) {
+                            clearInterval(intervaloIn);
+                            progresoIn = 100;
+                        }
+                        actualizarProgreso('#progresoSecundario', progresoIn);
+                        $('#opacidadSecundaria').text(Math.floor(progresoIn) + '%');
+                    }, 50);
+                    
+                    // Efecto fadeIn en el bloque secundario
+                    $('#bloqueSecundario').fadeIn(duracionFade, function() {
+                        clearInterval(intervaloIn);
+                        
+                        $('#estadoSecundario')
+                            .text('VISIBLE')
+                            .removeClass('estado-inactivo')
+                            .addClass('estado-activo');
+                        
+                        $('#estadoAnimacion').text('COMPLETADO');
+                        contadorTransiciones++;
+                        $('#contadorTransiciones').text(contadorTransiciones);
+                        animacionEnCurso = false;
+                    });
+                });
+            }
+            
+            // Función para reiniciar los efectos
+            function reiniciarEfectos() {
+                if (animacionEnCurso) {
+                    $('#bloquePrincipal').stop(true, true);
+                    $('#bloqueSecundario').stop(true, true);
+                    animacionEnCurso = false;
+                }
+                
+                // Resetear inmediatamente
+                $('#bloqueSecundario').fadeOut(0);
+                $('#bloquePrincipal').fadeIn(0);
+                
+                // Actualizar estados
+                $('#estadoPrincipal')
+                    .text('VISIBLE')
+                    .removeClass('estado-inactivo')
+                    .addClass('estado-activo');
+                $('#estadoSecundario')
+                    .text('OCULTO')
+                    .removeClass('estado-activo')
+                    .addClass('estado-inactivo');
+                
+                $('#opacidadPrincipal').text('100%');
+                $('#opacidadSecundaria').text('0%');
+                actualizarProgreso('#progresoPrincipal', 0);
+                actualizarProgreso('#progresoSecundario', 0);
+                $('#estadoAnimacion').text('REINICIADO');
+            }
+            
+            // Función para alternar efectos
+            function alternarEfectos() {
+                if ($('#bloquePrincipal').is(':visible')) {
+                    iniciarFade();
+                } else {
+                    // Efecto inverso: fadeOut secundario, fadeIn principal
+                    $('#bloqueSecundario').fadeOut(duracionFade, function() {
+                        $('#bloquePrincipal').fadeIn(duracionFade);
+                    });
+                }
+            }
+            
+            // Función para cambiar velocidad
+            function cambiarVelocidad() {
+                velocidadIndex = (velocidadIndex + 1) % velocidades.length;
+                const velocidad = velocidades[velocidadIndex];
+                duracionFade = velocidad.valor;
+                $('#duracionFade').text(duracionFade);
+                $('#velocidadActual').text(velocidad.nombre);
+            }
+            
+            // Eventos
+            $('#bloquePrincipal').click(function() {
+                iniciarFade();
+            });
+            
+            $('#btnReiniciar').click(function() {
+                reiniciarEfectos();
+            });
+            
+            $('#btnAlternar').click(function() {
+                alternarEfectos();
+            });
+            
+            $('#btnCambiarVelocidad').click(function() {
+                cambiarVelocidad();
+            });
+            
+            // Efecto hover mejorado
+            $('.bloque-principal, .bloque-secundario').hover(
+                function() {
+                    if (!animacionEnCurso && $(this).is(':visible')) {
+                        $(this).css('transform', 'translateY(-5px) scale(1.02)');
+                    }
+                },
+                function() {
+                    $(this).css('transform', 'translateY(0px) scale(1)');
+                }
+            );
+            
+            // Inicialización
+            $('#estadoAnimacion').text('ESPERANDO');
+            $('#duracionFade').text(duracionFade);
+        });
+    </script>
+</body>
+</html>
