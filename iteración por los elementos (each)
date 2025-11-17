@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resaltar Subdominios</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .instructions {
+            background-color: #e8f4fd;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+        }
+        .link-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .link-item {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            transition: all 0.3s ease;
+        }
+        .link-item:hover {
+            background-color: #f0f0f0;
+        }
+        .link-item a {
+            text-decoration: none;
+            color: #2980b9;
+            font-weight: 500;
+        }
+        .subdomain {
+            background-color: #fffde7;
+            border: 1px solid #ffeb3b;
+        }
+        .subdomain a {
+            color: #e67e22;
+        }
+        .subdomain-badge {
+            display: inline-block;
+            background-color: #f39c12;
+            color: white;
+            font-size: 0.8em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 10px;
+            vertical-align: middle;
+        }
+        .explanation {
+            margin-top: 30px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Resaltar Subdominios en Hipervínculos</h1>
+        
+        <div class="instructions">
+            <p>Esta página contiene una lista de hipervínculos. Los enlaces que contienen subdominios están resaltados en amarillo.</p>
+            <p><strong>Nota:</strong> Un subdominio es la parte de la URL que precede al dominio principal (ej: "blog" en "blog.ejemplo.com").</p>
+        </div>
+        
+        <ul class="link-list" id="linkList">
+            <!-- Los enlaces se generarán dinámicamente con JavaScript -->
+        </ul>
+        
+        <div class="explanation">
+            <h3>¿Cómo funciona?</h3>
+            <p>El código utiliza el método <code>indexOf()</code> de JavaScript para buscar la presencia de un punto (.) antes del dominio principal en cada URL. Si encuentra al menos un punto antes del dominio principal, identifica que hay un subdominio.</p>
+            <p>Por ejemplo:</p>
+            <ul>
+                <li><code>https://www.ejemplo.com</code> → tiene subdominio "www"</li>
+                <li><code>https://blog.ejemplo.com</code> → tiene subdominio "blog"</li>
+                <li><code>https://ejemplo.com</code> → NO tiene subdominio</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Lista de hipervínculos de ejemplo
+            const links = [
+                { text: "Google", url: "https://www.google.com" },
+                { text: "Wikipedia", url: "https://www.wikipedia.org" },
+                { text: "GitHub", url: "https://github.com" },
+                { text: "Stack Overflow", url: "https://stackoverflow.com" },
+                { text: "Amazon", url: "https://www.amazon.com" },
+                { text: "Twitter", url: "https://twitter.com" },
+                { text: "Facebook", url: "https://www.facebook.com" },
+                { text: "YouTube", url: "https://www.youtube.com" },
+                { text: "LinkedIn", url: "https://www.linkedin.com" },
+                { text: "Instagram", url: "https://www.instagram.com" },
+                { text: "Reddit", url: "https://www.reddit.com" },
+                { text: "Netflix", url: "https://www.netflix.com" },
+                { text: "Spotify", url: "https://open.spotify.com" },
+                { text: "Apple", url: "https://www.apple.com" },
+                { text: "Microsoft", url: "https://www.microsoft.com" }
+            ];
+
+            const linkList = document.getElementById('linkList');
+            
+            // Función para verificar si una URL tiene subdominio
+            function hasSubdomain(url) {
+                // Eliminar el protocolo (http://, https://)
+                let domain = url.replace(/^https?:\/\//, '');
+                
+                // Encontrar la posición del primer punto después del posible subdominio
+                const firstDotIndex = domain.indexOf('.');
+                
+                // Si hay un punto, verificar si hay texto antes de él (subdominio)
+                if (firstDotIndex !== -1) {
+                    const beforeFirstDot = domain.substring(0, firstDotIndex);
+                    
+                    // Excluir "www" como subdominio para este ejemplo
+                    // (en un caso real, podrías querer incluirlo)
+                    if (beforeFirstDot !== 'www' && beforeFirstDot.length > 0) {
+                        return true;
+                    }
+                }
+                
+                return false;
+            }
+            
+            // Iterar por cada elemento de la lista de enlaces
+            links.forEach(link => {
+                const listItem = document.createElement('li');
+                listItem.className = 'link-item';
+                
+                // Verificar si el enlace tiene subdominio
+                if (hasSubdomain(link.url)) {
+                    listItem.classList.add('subdomain');
+                }
+                
+                // Crear el elemento de enlace
+                const anchor = document.createElement('a');
+                anchor.href = link.url;
+                anchor.textContent = link.text;
+                anchor.target = "_blank";
+                
+                // Agregar el enlace al elemento de lista
+                listItem.appendChild(anchor);
+                
+                // Agregar una etiqueta si tiene subdominio
+                if (hasSubdomain(link.url)) {
+                    const badge = document.createElement('span');
+                    badge.className = 'subdomain-badge';
+                    badge.textContent = 'Subdominio';
+                    listItem.appendChild(badge);
+                }
+                
+                // Agregar el elemento de lista a la lista
+                linkList.appendChild(listItem);
+            });
+        });
+    </script>
+</body>
+</html>
