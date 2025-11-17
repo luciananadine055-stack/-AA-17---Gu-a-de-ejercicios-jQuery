@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efectos show y hide en jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            text-align: center;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .bloque-principal {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            border: 3px solid #2d3436;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        .bloque-principal:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+        }
+        
+        .bloque-secundario {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            border: 3px solid #2d3436;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            color: white;
+            display: none;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        .bloque-principal h2, .bloque-secundario h2 {
+            margin-top: 0;
+            text-align: center;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 15px;
+        }
+        
+        .parrafo {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .instrucciones {
+            background-color: #fff3cd;
+            border: 2px dashed #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .info-panel {
+            background-color: #e8f4fc;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .estado-bloques {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .estado-bloque {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            min-width: 150px;
+            border-top: 4px solid #3498db;
+            text-align: center;
+        }
+        
+        .estado-bloque h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+        
+        .estado-bloque .estado {
+            font-size: 18px;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 6px;
+        }
+        
+        .estado-activo {
+            background-color: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        
+        .estado-inactivo {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+        
+        .estadisticas {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .estadistica-card {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            min-width: 120px;
+            border-top: 4px solid #74b9ff;
+            text-align: center;
+        }
+        
+        .estadistica-card h3 {
+            margin: 0 0 8px 0;
+            color: #2c3e50;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        
+        .estadistica-card .numero {
+            font-size: 24px;
+            font-weight: bold;
+            color: #74b9ff;
+        }
+        
+        .codigo-ejemplo {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            text-align: left;
+            overflow-x: auto;
+        }
+        
+        .controles {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .boton-control {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .boton-control:hover {
+            background: linear-gradient(135deg, #27ae60, #219653);
+            transform: translateY(-2px);
+        }
+        
+        .boton-reset {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .boton-reset:hover {
+            background: linear-gradient(135deg, #c0392b, #a93226);
+        }
+        
+        .animacion-info {
+            text-align: center;
+            margin: 15px 0;
+            font-style: italic;
+            color: #7f8c8d;
+        }
+        
+        .efecto-transicion {
+            transition: all 0.8s ease !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Efectos show y hide en jQuery</h1>
+        <p class="subtitle">Haz clic en el bloque azul para ver la transición</p>
+        
+        <div class="instrucciones">
+            <h3>🎯 Instrucciones:</h3>
+            <p>Haz clic en el <strong>bloque azul</strong> para ocultarlo lentamente.</p>
+            <p>Cuando esté completamente oculto, aparecerá lentamente el <strong>bloque rosa</strong>.</p>
+            <p>Puedes reiniciar la animación en cualquier momento.</p>
+        </div>
+        
+        <div class="estado-bloques">
+            <div class="estado-bloque">
+                <h3>Bloque Principal</h3>
+                <div class="estado estado-activo" id="estadoPrincipal">VISIBLE</div>
+            </div>
+            <div class="estado-bloque">
+                <h3>Bloque Secundario</h3>
+                <div class="estado estado-inactivo" id="estadoSecundario">OCULTO</div>
+            </div>
+        </div>
+        
+        <div class="bloque-principal" id="bloquePrincipal">
+            <h2>📖 Bloque Principal</h2>
+            <p class="parrafo">Este es el primer bloque de texto. Contiene información importante que puedes leer antes de continuar.</p>
+            <p class="parrafo">La programación web moderna utiliza jQuery para crear efectos visuales atractivos y interactivos. Los métodos show() y hide() son fundamentales para controlar la visibilidad de elementos.</p>
+            <p class="parrafo">Haz clic en cualquier parte de este bloque para ver cómo se oculta lentamente y revela nuevo contenido.</p>
+            <p class="parrafo">Observa cómo la transición es suave y gradual, proporcionando una excelente experiencia de usuario.</p>
+            <div class="animacion-info">💡 Haz clic aquí para comenzar la animación</div>
+        </div>
+        
+        <div class="bloque-secundario" id="bloqueSecundario">
+            <h2>✨ Nuevo Contenido Revelado</h2>
+            <p class="parrafo">¡Felicitaciones! Has descubierto el bloque secundario. Este contenido estaba oculto y apareció gracias a los efectos de jQuery.</p>
+            <p class="parrafo">Los métodos show() y hide() pueden recibir parámetros para controlar la velocidad de la animación. Puedes usar valores como 'slow', 'fast' o milisegundos específicos.</p>
+            <p class="parrafo">Este efecto es muy útil para crear interfaces dinámicas donde la información se revela progresivamente.</p>
+            <p class="parrafo">Puedes reiniciar la animación usando el botón de abajo para ver el efecto nuevamente.</p>
+            <div class="animacion-info">🎉 ¡Contenido revelado exitosamente!</div>
+        </div>
+        
+        <div class="controles">
+            <button class="boton-control" id="btnReiniciar">Reiniciar Animación</button>
+            <button class="boton-control boton-reset" id="btnAlternar">Alternar Manualmente</button>
+        </div>
+        
+        <div class="info-panel">
+            <h3>📊 Información de la Animación:</h3>
+            <div class="estadisticas">
+                <div class="estadistica-card">
+                    <h3>Animaciones</h3>
+                    <div class="numero" id="contadorAnimaciones">0</div>
+                </div>
+                <div class="estadistica-card">
+                    <h3>Duración</h3>
+                    <div class="numero" id="duracionAnimacion">1000</div>
+                    <small>milisegundos</small>
+                </div>
+                <div class="estadistica-card">
+                    <h3>Estado</h3>
+                    <div class="numero" id="estadoAnimacion">ESPERANDO</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="codigo-ejemplo">
+            <h4>🔧 Código jQuery - Métodos show() y hide():</h4>
+            <pre>
+// Ocultar el bloque principal lentamente
+$('#bloquePrincipal').hide(1000, function() {
+    // Esta función se ejecuta CUANDO LA OCULTACIÓN SE COMPLETA
+    $('#estadoPrincipal').text('OCULTO').removeClass('estado-activo').addClass('estado-inactivo');
+    $('#estadoSecundario').text('VISIBLE').removeClass('estado-inactivo').addClass('estado-activo');
+    
+    // Mostrar el bloque secundario lentamente
+    $('#bloqueSecundario').show(1000, function() {
+        // Esta función se ejecuta CUANDO LA APARICIÓN SE COMPLETA
+        $('#estadoAnimacion').text('COMPLETADA');
+        contadorAnimaciones++;
+        $('#contadorAnimaciones').text(contadorAnimaciones);
+    });
+});
+
+// Reiniciar la animación
+function reiniciarAnimacion() {
+    // Ocultar bloque secundario rápidamente
+    $('#bloqueSecundario').hide(0);
+    $('#estadoSecundario').text('OCULTO').removeClass('estado-activo').addClass('estado-inactivo');
+    
+    // Mostrar bloque principal
+    $('#bloquePrincipal').show(0);
+    $('#estadoPrincipal').text('VISIBLE').removeClass('estado-inactivo').addClass('estado-activo');
+    
+    $('#estadoAnimacion').text('REINICIADO');
+}
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            let contadorAnimaciones = 0;
+            let duracionAnimacion = 1000;
+            let animacionEnCurso = false;
+            
+            // Función para iniciar la animación principal
+            function iniciarAnimacion() {
+                if (animacionEnCurso) return;
+                
+                animacionEnCurso = true;
+                $('#estadoAnimacion').text('OCULTANDO...');
+                
+                // Ocultar el bloque principal lentamente
+                $('#bloquePrincipal').hide(duracionAnimacion, function() {
+                    // Esta función se ejecuta CUANDO LA OCULTACIÓN SE COMPLETA
+                    $('#estadoPrincipal')
+                        .text('OCULTO')
+                        .removeClass('estado-activo')
+                        .addClass('estado-inactivo');
+                    
+                    $('#estadoAnimacion').text('MOSTRANDO...');
+                    
+                    // Mostrar el bloque secundario lentamente
+                    $('#bloqueSecundario').show(duracionAnimacion, function() {
+                        // Esta función se ejecuta CUANDO LA APARICIÓN SE COMPLETA
+                        $('#estadoSecundario')
+                            .text('VISIBLE')
+                            .removeClass('estado-inactivo')
+                            .addClass('estado-activo');
+                        
+                        $('#estadoAnimacion').text('COMPLETADA');
+                        contadorAnimaciones++;
+                        $('#contadorAnimaciones').text(contadorAnimaciones);
+                        animacionEnCurso = false;
+                    });
+                });
+            }
+            
+            // Función para reiniciar la animación
+            function reiniciarAnimacion() {
+                if (animacionEnCurso) {
+                    // Si hay animación en curso, detenerla
+                    $('#bloquePrincipal').stop(true, true);
+                    $('#bloqueSecundario').stop(true, true);
+                    animacionEnCurso = false;
+                }
+                
+                // Ocultar bloque secundario inmediatamente
+                $('#bloqueSecundario').hide(0);
+                $('#estadoSecundario')
+                    .text('OCULTO')
+                    .removeClass('estado-activo')
+                    .addClass('estado-inactivo');
+                
+                // Mostrar bloque principal inmediatamente
+                $('#bloquePrincipal').show(0);
+                $('#estadoPrincipal')
+                    .text('VISIBLE')
+                    .removeClass('estado-inactivo')
+                    .addClass('estado-activo');
+                
+                $('#estadoAnimacion').text('REINICIADO');
+            }
+            
+            // Función para alternar manualmente
+            function alternarManual() {
+                if ($('#bloquePrincipal').is(':visible')) {
+                    iniciarAnimacion();
+                } else {
+                    reiniciarAnimacion();
+                }
+            }
+            
+            // Evento click en el bloque principal
+            $('#bloquePrincipal').click(function() {
+                iniciarAnimacion();
+            });
+            
+            // Evento click en el botón reiniciar
+            $('#btnReiniciar').click(function() {
+                reiniciarAnimacion();
+            });
+            
+            // Evento click en el botón alternar
+            $('#btnAlternar').click(function() {
+                alternarManual();
+            });
+            
+            // Control de velocidad de animación
+            $('#duracionAnimacion').click(function() {
+                const nuevasDuraciones = [500, 1000, 1500, 2000];
+                const indiceActual = nuevasDuraciones.indexOf(duracionAnimacion);
+                const nuevoIndice = (indiceActual + 1) % nuevasDuraciones.length;
+                duracionAnimacion = nuevasDuraciones[nuevoIndice];
+                $(this).text(duracionAnimacion);
+            });
+            
+            // Efecto hover mejorado
+            $('.bloque-principal, .bloque-secundario').hover(
+                function() {
+                    if (!animacionEnCurso) {
+                        $(this).css('transform', 'translateY(-5px)');
+                    }
+                },
+                function() {
+                    $(this).css('transform', 'translateY(0px)');
+                }
+            );
+            
+            // Inicialización
+            $('#estadoAnimacion').text('ESPERANDO');
+        });
+    </script>
+</body>
+</html>
