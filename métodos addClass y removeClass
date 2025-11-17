@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Métodos addClass y removeClass en jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #f8f9fa;
+            line-height: 1.6;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        /* Estilos base para la tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 30px 0;
+            font-size: 16px;
+        }
+        
+        /* Estilos para la cabecera - Clase 1 */
+        .estilo-thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom: 3px solid #5a6fd8;
+        }
+        
+        .estilo-thead th {
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-right: 1px solid rgba(255,255,255,0.2);
+        }
+        
+        .estilo-thead th:last-child {
+            border-right: none;
+        }
+        
+        /* Estilos para el cuerpo - Clase 2 */
+        .estilo-tbody {
+            background-color: #f8f9fa;
+        }
+        
+        .estilo-tbody tr:nth-child(even) {
+            background-color: #e9ecef;
+        }
+        
+        .estilo-tbody tr:hover {
+            background-color: #dbe4ff;
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+        }
+        
+        .estilo-tbody td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+            color: #495057;
+        }
+        
+        .estilo-tbody tr:last-child td {
+            border-bottom: 2px solid #667eea;
+        }
+        
+        /* Estilos cuando NO tienen clases aplicadas */
+        thead:not(.estilo-thead) th {
+            background-color: #6c757d;
+            color: white;
+            padding: 12px;
+            border: 1px solid #dee2e6;
+        }
+        
+        tbody:not(.estilo-tbody) tr {
+            border: 1px solid #dee2e6;
+        }
+        
+        tbody:not(.estilo-tbody) td {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+        }
+        
+        /* Controles de botones */
+        .controles {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 180px;
+        }
+        
+        .btn-aplicar {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+        }
+        
+        .btn-aplicar:hover {
+            background: linear-gradient(135deg, #27ae60, #219653);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(39, 174, 96, 0.3);
+        }
+        
+        .btn-remover {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+        
+        .btn-remover:hover {
+            background: linear-gradient(135deg, #c0392b, #a93226);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3);
+        }
+        
+        .btn-alternar {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+        
+        .btn-alternar:hover {
+            background: linear-gradient(135deg, #2980b9, #2471a3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3);
+        }
+        
+        .panel-info {
+            background-color: #e8f4fc;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .estado-clases {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .clase-info {
+            padding: 15px;
+            border-radius: 5px;
+            min-width: 200px;
+        }
+        
+        .clase-activa {
+            background-color: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        
+        .clase-inactiva {
+            background-color: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        
+        .codigo-ejemplo {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Métodos addClass() y removeClass() en jQuery</h1>
+    
+    <div class="container">
+        <h2>Tabla de Productos</h2>
+        
+        <table id="miTabla">
+            <thead id="cabeceraTabla">
+                <tr>
+                    <th>ID</th>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                </tr>
+            </thead>
+            <tbody id="cuerpoTabla">
+                <tr>
+                    <td>001</td>
+                    <td>Laptop Gamer</td>
+                    <td>Tecnología</td>
+                    <td>$1,200</td>
+                    <td>15</td>
+                </tr>
+                <tr>
+                    <td>002</td>
+                    <td>Smartphone</td>
+                    <td>Tecnología</td>
+                    <td>$800</td>
+                    <td>30</td>
+                </tr>
+                <tr>
+                    <td>003</td>
+                    <td>Tablet</td>
+                    <td>Tecnología</td>
+                    <td>$400</td>
+                    <td>25</td>
+                </tr>
+                <tr>
+                    <td>004</td>
+                    <td>Auriculares</td>
+                    <td>Audio</td>
+                    <td>$150</td>
+                    <td>50</td>
+                </tr>
+                <tr>
+                    <td>005</td>
+                    <td>Monitor 24"</td>
+                    <td>Hardware</td>
+                    <td>$300</td>
+                    <td>20</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div class="controles">
+            <button class="btn btn-aplicar" id="btnAplicarClases">Aplicar Clases</button>
+            <button class="btn btn-remover" id="btnRemoverClases">Remover Clases</button>
+            <button class="btn btn-alternar" id="btnAlternarClases">Alternar Clases</button>
+        </div>
+        
+        <div class="panel-info">
+            <h3>Estado de las Clases CSS:</h3>
+            <div class="estado-clases">
+                <div class="clase-info" id="estadoThead">
+                    <strong>thead:</strong><br>
+                    <span>estilo-thead</span><br>
+                    <strong id="estadoTheadTexto">No aplicada</strong>
+                </div>
+                <div class="clase-info" id="estadoTbody">
+                    <strong>tbody:</strong><br>
+                    <span>estilo-tbody</span><br>
+                    <strong id="estadoTbodyTexto">No aplicada</strong>
+                </div>
+            </div>
+        </div>
+        
+        <div class="codigo-ejemplo">
+            <h4>Código jQuery utilizado:</h4>
+            <pre>
+// Aplicar clases
+$('#cabeceraTabla').addClass('estilo-thead');
+$('#cuerpoTabla').addClass('estilo-tbody');
+
+// Remover clases
+$('#cabeceraTabla').removeClass('estilo-thead');
+$('#cuerpoTabla').removeClass('estilo-tbody');
+
+// Alternar clases
+$('#cabeceraTabla').toggleClass('estilo-thead');
+$('#cuerpoTabla').toggleClass('estilo-tbody');
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Función para actualizar el estado visual de las clases
+            function actualizarEstadoClases() {
+                const theadTieneClase = $('#cabeceraTabla').hasClass('estilo-thead');
+                const tbodyTieneClase = $('#cuerpoTabla').hasClass('estilo-tbody');
+                
+                // Actualizar estado del thead
+                if (theadTieneClase) {
+                    $('#estadoThead').removeClass('clase-inactiva').addClass('clase-activa');
+                    $('#estadoTheadTexto').text('Aplicada').css('color', '#155724');
+                } else {
+                    $('#estadoThead').removeClass('clase-activa').addClass('clase-inactiva');
+                    $('#estadoTheadTexto').text('No aplicada').css('color', '#721c24');
+                }
+                
+                // Actualizar estado del tbody
+                if (tbodyTieneClase) {
+                    $('#estadoTbody').removeClass('clase-inactiva').addClass('clase-activa');
+                    $('#estadoTbodyTexto').text('Aplicada').css('color', '#155724');
+                } else {
+                    $('#estadoTbody').removeClass('clase-activa').addClass('clase-inactiva');
+                    $('#estadoTbodyTexto').text('No aplicada').css('color', '#721c24');
+                }
+            }
+            
+            // Inicializar estado
+            actualizarEstadoClases();
+            
+            // Botón para aplicar clases
+            $('#btnAplicarClases').click(function() {
+                $('#cabeceraTabla').addClass('estilo-thead');
+                $('#cuerpoTabla').addClass('estilo-tbody');
+                actualizarEstadoClases();
+            });
+            
+            // Botón para remover clases
+            $('#btnRemoverClases').click(function() {
+                $('#cabeceraTabla').removeClass('estilo-thead');
+                $('#cuerpoTabla').removeClass('estilo-tbody');
+                actualizarEstadoClases();
+            });
+            
+            // Botón para alternar clases
+            $('#btnAlternarClases').click(function() {
+                $('#cabeceraTabla').toggleClass('estilo-thead');
+                $('#cuerpoTabla').toggleClass('estilo-tbody');
+                actualizarEstadoClases();
+            });
+        });
+    </script>
+</body>
+</html>
