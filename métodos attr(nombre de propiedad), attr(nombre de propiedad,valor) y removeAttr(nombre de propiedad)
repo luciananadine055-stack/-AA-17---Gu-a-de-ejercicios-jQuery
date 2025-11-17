@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Métodos attr() y removeAttr() en jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background-color: #f8f9fa;
+            line-height: 1.6;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .enlace-container {
+            text-align: center;
+            padding: 30px;
+            background-color: #ecf0f1;
+            border-radius: 8px;
+            margin: 30px 0;
+            border: 2px dashed #bdc3c7;
+        }
+        
+        #miEnlace {
+            font-size: 20px;
+            padding: 15px 30px;
+            background-color: #3498db;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            transition: all 0.3s ease;
+            min-width: 300px;
+        }
+        
+        #miEnlace:hover {
+            background-color: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        
+        #miEnlace:disabled {
+            background-color: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .botones-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+        
+        .btn-enlace {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+        
+        .btn-enlace:hover {
+            background-color: #27ae60;
+            transform: translateY(-2px);
+        }
+        
+        .btn-remover {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-remover:hover {
+            background-color: #c0392b;
+            transform: translateY(-2px);
+        }
+        
+        .info-panel {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .estado {
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        
+        .propiedades {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .propiedades h3 {
+            color: #2c3e50;
+            margin-top: 0;
+        }
+        
+        code {
+            background-color: #2c3e50;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Métodos attr() y removeAttr() en jQuery</h1>
+    
+    <div class="container">
+        <div class="enlace-container">
+            <h2>Hipervínculo Interactivo</h2>
+            <a id="miEnlace" href="">Enlace sin destino</a>
+        </div>
+        
+        <div class="botones-container">
+            <button class="btn-enlace" id="btnGoogle">Google</button>
+            <button class="btn-enlace" id="btnWikipedia">Wikipedia</button>
+            <button class="btn-enlace" id="btnGitHub">GitHub</button>
+            <button class="btn-remover" id="btnRemover">Remover Enlace</button>
+        </div>
+        
+        <div class="info-panel">
+            <p><strong>Estado actual:</strong> <span class="estado" id="estadoActual">Enlace deshabilitado (href vacío)</span></p>
+            <p><strong>Atributo href actual:</strong> <code id="hrefActual">""</code></p>
+            <p><strong>Texto actual:</strong> "<span id="textoActual">Enlace sin destino</span>"</p>
+        </div>
+        
+        <div class="propiedades">
+            <h3>Métodos jQuery utilizados:</h3>
+            <ul>
+                <li><code>attr('href')</code> - Obtener el valor del atributo href</li>
+                <li><code>attr('href', valor)</code> - Establecer el valor del atributo href</li>
+                <li><code>removeAttr('href')</code> - Remover el atributo href</li>
+                <li><code>text('nuevo texto')</code> - Cambiar el texto del enlace</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Función para actualizar el panel de información
+            function actualizarInfo() {
+                const hrefActual = $('#miEnlace').attr('href');
+                const textoActual = $('#miEnlace').text();
+                
+                $('#hrefActual').text('"' + (hrefActual || '') + '"');
+                $('#textoActual').text(textoActual);
+                
+                if (!hrefActual) {
+                    $('#estadoActual').text('Enlace deshabilitado (href vacío)').css('color', '#e74c3c');
+                    $('#miEnlace').css('background-color', '#95a5a6');
+                } else {
+                    $('#estadoActual').text('Enlace activo').css('color', '#27ae60');
+                    $('#miEnlace').css('background-color', '#3498db');
+                }
+            }
+            
+            // Inicializar información
+            actualizarInfo();
+            
+            // Botón para enlace a Google
+            $('#btnGoogle').click(function() {
+                $('#miEnlace')
+                    .attr('href', 'https://www.google.com')
+                    .text('Ir a Google')
+                    .attr('target', '_blank');
+                actualizarInfo();
+            });
+            
+            // Botón para enlace a Wikipedia
+            $('#btnWikipedia').click(function() {
+                $('#miEnlace')
+                    .attr('href', 'https://www.wikipedia.org')
+                    .text('Ir a Wikipedia')
+                    .attr('target', '_blank');
+                actualizarInfo();
+            });
+            
+            // Botón para enlace a GitHub
+            $('#btnGitHub').click(function() {
+                $('#miEnlace')
+                    .attr('href', 'https://www.github.com')
+                    .text('Ir a GitHub')
+                    .attr('target', '_blank');
+                actualizarInfo();
+            });
+            
+            // Botón para remover el atributo href
+            $('#btnRemover').click(function() {
+                $('#miEnlace')
+                    .removeAttr('href')
+                    .removeAttr('target')
+                    .text('Enlace sin destino');
+                actualizarInfo();
+            });
+            
+            // Mostrar alerta cuando se hace clic en el enlace (solo si tiene href)
+            $('#miEnlace').click(function(e) {
+                const href = $(this).attr('href');
+                if (!href) {
+                    e.preventDefault();
+                    alert('Este enlace no tiene destino asignado. Usa los botones para asignarle uno.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
