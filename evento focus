@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evento focus en jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            text-align: center;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .form-container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        .campo-grupo {
+            margin-bottom: 30px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+        
+        .campo-texto {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 3px solid #bdc3c7;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+            color: #3498db;
+            font-weight: 500;
+        }
+        
+        .campo-texto:focus {
+            outline: none;
+            border-color: #e74c3c;
+            background-color: white;
+            box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+        }
+        
+        .campo-texto::placeholder {
+            color: #95a5a6;
+            font-weight: normal;
+        }
+        
+        .campo-activo {
+            color: #e74c3c !important;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+        }
+        
+        .info-panel {
+            background-color: #e8f4fc;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 40px 0 30px 0;
+        }
+        
+        .estado-campos {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .estado-campo {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            min-width: 200px;
+            border-top: 4px solid #3498db;
+            transition: all 0.3s ease;
+        }
+        
+        .estado-campo h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+        
+        .estado-campo .estado {
+            font-size: 18px;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 6px;
+        }
+        
+        .estado-activo {
+            background-color: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        
+        .estado-inactivo {
+            background-color: #f8f9fa;
+            color: #6c757d;
+            border: 2px solid #e9ecef;
+        }
+        
+        .estado-focus {
+            background-color: #fff3cd
