@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selección por clases CSS en jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .noticia {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .titulo-noticia {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        
+        .descripcion-noticia {
+            line-height: 1.6;
+            color: #34495e;
+            transition: font-size 0.3s ease;
+        }
+        
+        .botones-container {
+            text-align: center;
+            margin: 30px 0;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .btn-tamano {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-tamano:hover {
+            background-color: #2980b9;
+        }
+        
+        .info-clase {
+            text-align: center;
+            font-style: italic;
+            color: #7f8c8d;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Portal de Noticias</h1>
+    
+    <div class="botones-container">
+        <h3>Cambiar tamaño de fuente de las descripciones:</h3>
+        <button class="btn-tamano" id="btn-pequeno">Texto Pequeño</button>
+        <button class="btn-tamano" id="btn-mediano">Texto Mediano</button>
+        <button class="btn-tamano" id="btn-grande">Texto Grande</button>
+        <div class="info-clase" id="info-clase">
+            Clase actual: <strong>descripcion-noticia</strong>
+        </div>
+    </div>
+    
+    <div class="noticia">
+        <h2 class="titulo-noticia">Avances en la investigación del cambio climático</h2>
+        <div class="descripcion-noticia">
+            Un equipo internacional de científicos ha publicado un estudio revolucionario que demuestra 
+            la relación directa entre las actividades humanas y el aumento de la temperatura global. 
+            Los resultados, obtenidos tras cinco años de investigación, proporcionan evidencia 
+            contundente para la implementación de políticas ambientales más estrictas.
+        </div>
+    </div>
+    
+    <div class="noticia">
+        <h2 class="titulo-noticia">Nueva tecnología revoluciona la industria médica</h2>
+        <div class="descripcion-noticia">
+            Una startup tecnológica ha desarrollado un dispositivo portátil capaz de diagnosticar 
+            más de 50 enfermedades en cuestión de minutos. Esta innovación promete transformar 
+            la atención médica en zonas remotas y reducir significativamente los costos de diagnóstico.
+        </div>
+    </div>
+    
+    <div class="noticia">
+        <h2 class="titulo-noticia">Descubrimiento arqueológico redefine la historia antigua</h2>
+        <div class="descripcion-noticia">
+            Arqueólogos han desenterrado en Turquía los restos de una ciudad que data de hace 12,000 años, 
+            lo que sugiere que la civilización urbana comenzó mucho antes de lo que se creía. El yacimiento 
+            incluye estructuras complejas y artefactos que desafían las teorías actuales sobre el desarrollo humano.
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Obtener el nombre de la clase de las descripciones
+            const claseDescripcion = $('.descripcion-noticia').attr('class');
+            
+            // Mostrar la clase actual en el panel de información
+            $('#info-clase strong').text(claseDescripcion);
+            
+            // Botón para texto pequeño
+            $('#btn-pequeno').click(function() {
+                $('.descripcion-noticia').css('font-size', '14px');
+                $('#info-clase').html('Clase actual: <strong>' + claseDescripcion + '</strong> - Tamaño: Pequeño');
+            });
+            
+            // Botón para texto mediano
+            $('#btn-mediano').click(function() {
+                $('.descripcion-noticia').css('font-size', '16px');
+                $('#info-clase').html('Clase actual: <strong>' + claseDescripcion + '</strong> - Tamaño: Mediano');
+            });
+            
+            // Botón para texto grande
+            $('#btn-grande').click(function() {
+                $('.descripcion-noticia').css('font-size', '18px');
+                $('#info-clase').html('Clase actual: <strong>' + claseDescripcion + '</strong> - Tamaño: Grande');
+            });
+        });
+    </script>
+</body>
+</html>
