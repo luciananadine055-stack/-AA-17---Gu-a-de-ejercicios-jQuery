@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evento dblclick en jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .div-interactivo {
+            width: 800px;
+            height: 70px;
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            border: 4px solid #2d3436;
+            border-radius: 15px;
+            margin: 30px auto;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .div-interactivo:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+        }
+        
+        .div-interactivo::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.7s;
+        }
+        
+        .div-interactivo:hover::before {
+            left: 100%;
+        }
+        
+        .div-grande {
+            width: 800px;
+            height: 70px;
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+        }
+        
+        .div-pequeno {
+            width: 250px;
+            height: 250px;
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            font-size: 16px;
+        }
+        
+        .info-tamano {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .instrucciones-dblclick {
+            position: absolute;
+            bottom: 10px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #2d3436;
+            padding: 5px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .info-panel {
+            background-color: #e8f4fc;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .estado-tamano {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .estado-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            min-width: 150px;
+            border-top: 4px solid #3498db;
+        }
+        
+        .estado-item h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+        
+        .estado-item .valor {
+            font-size: 20px;
+            font-weight: bold;
+            color: #3498db;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .estadisticas {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .estadistica-card {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            min-width: 120px;
+            border-top: 4px solid #74b9ff;
+        }
+        
+        .estadistica-card h3 {
+            margin: 0 0 8px 0;
+            color: #2c3e50;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        
+        .estadistica-card .numero {
+            font-size: 24px;
+            font-weight: bold;
+            color: #74b9ff;
+        }
+        
+        .codigo-ejemplo {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            text-align: left;
+            overflow-x: auto;
+        }
+        
+        .instrucciones {
+            background-color: #fff3cd;
+            border: 2px dashed #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .efecto-transicion {
+            animation: resaltar 0.8s ease;
+        }
+        
+        @keyframes resaltar {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .historial-eventos {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            max-height: 150px;
+            overflow-y: auto;
+            text-align: left;
+        }
+        
+        .evento-item {
+            padding: 5px 10px;
+            margin: 5px 0;
+            border-left: 4px solid #3498db;
+            background: white;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .evento-dblclick {
+            border-left-color: #e84393;
+            background-color: #ffeaa7;
+        }
+        
+        .comparacion-tamanos {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .tamano-ejemplo {
+            text-align: center;
+            padding: 15px;
+        }
+        
+        .ejemplo-visual {
+            width: 100px;
+            height: 50px;
+            background: #74b9ff;
+            border: 2px solid #2d3436;
+            border-radius: 8px;
+            margin: 10px auto;
+        }
+        
+        .ejemplo-visual.pequeno {
+            width: 80px;
+            height: 80px;
+            background: #fd79a8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Evento dblclick en jQuery</h1>
+        <p class="subtitle">Haz doble clic en el área interactiva para cambiar su tamaño</p>
+        
+        <div class="instrucciones">
+            <h3>🎯 Instrucciones:</h3>
+            <p>Haz <strong>doble clic rápido</strong> (dos clics seguidos) en el área azul para cambiar su tamaño.</p>
+            <p>El div alternará entre 800x70 píxeles y 250x250 píxeles con cada doble clic.</p>
+        </div>
+        
+        <div class="comparacion-tamanos">
+            <div class="tamano-ejemplo">
+                <div class="ejemplo-visual"></div>
+                <p>800 × 70 px</p>
+                <small>(Tamaño inicial)</small>
+            </div>
+            <div class="tamano-ejemplo">
+                <div class="ejemplo-visual pequeno"></div>
+                <p>250 × 250 px</p>
+                <small>(Tamaño alternativo)</small>
+            </div>
+        </div>
+        
+        <div class="div-interactivo" id="divInteractivo">
+            <div class="info-tamano" id="infoTamano">800 × 70 px</div>
+            <div class="instrucciones-dblclick">💡 Doble clic para cambiar tamaño</div>
+            <div class="contenido-central">
+                <div>¡Haz doble clic en mí!</div>
+                <div style="font-size: 14px; margin-top: 5px; opacity: 0.9;">
+                    Tamaño actual: <span id="tamanoActual">Grande (800×70)</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="info-panel">
+            <h3>📊 Estado del Div:</h3>
+            <div class="estado-tamano">
+                <div class="estado-item">
+                    <h3>Ancho Actual</h3>
+                    <div class="valor" id="anchoActual">800px</div>
+                </div>
+                <div class="estado-item">
+                    <h3>Alto Actual</h3>
+                    <div class="valor" id="altoActual">70px</div>
+                </div>
+                <div class="estado-item">
+                    <h3>Relación Aspecto</h3>
+                    <div class="valor" id="relacionAspecto">11.43:1</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="estadisticas">
+            <div class="estadistica-card">
+                <h3>Doble Clicks</h3>
+                <div class="numero" id="contadorDblclick">0</div>
+            </div>
+            <div class="estadistica-card">
+                <h3>Estado Actual</h3>
+                <div class="numero" id="estadoActual">GRANDE</div>
+            </div>
+            <div class="estadistica-card">
+                <h3>Último Cambio</h3>
+                <div class="numero" id="ultimoCambio">-</div>
+            </div>
+        </div>
+        
+        <div class="historial-eventos">
+            <h4>📝 Historial de Cambios:</h4>
+            <div id="listaEventos">
+                <div class="evento-item">Esperando doble clics...</div>
+            </div>
+        </div>
+        
+        <div class="codigo-ejemplo">
+            <h4>🔧 Código jQuery - Evento dblclick:</h4>
+            <pre>
+// Variable para controlar el estado del tamaño
+let esGrande = true;
+
+// Evento dblclick para cambiar el tamaño
+$('#divInteractivo').dblclick(function() {
+    if (esGrande) {
+        // Cambiar a tamaño pequeño
+        $(this)
+            .removeClass('div-grande')
+            .addClass('div-pequeno efecto-transicion');
+        $('#infoTamano').text('250 × 250 px');
+        $('#tamanoActual').text('Pequeño (250×250)');
+        $('#anchoActual').text('250px');
+        $('#altoActual').text('250px');
+        $('#relacionAspecto').text('1:1');
+        $('#estadoActual').text('PEQUEÑO');
+    } else {
+        // Cambiar a tamaño grande
+        $(this)
+            .removeClass('div-pequeno')
+            .addClass('div-grande efecto-transicion');
+        $('#infoTamano').text('800 × 70 px');
+        $('#tamanoActual').text('Grande (800×70)');
+        $('#anchoActual').text('800px');
+        $('#altoActual').text('70px');
+        $('#relacionAspecto').text('11.43:1');
+        $('#estadoActual').text('GRANDE');
+    }
+    
+    // Alternar el estado
+    esGrande = !esGrande;
+    
+    // Actualizar contador y registrar evento
+    contadorDblclick++;
+    $('#contadorDblclick').text(contadorDblclick);
+    registrarEvento(esGrande ? 'Cambió a GRANDE' : 'Cambió a PEQUEÑO');
+});
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            let esGrande = true;
+            let contadorDblclick = 0;
+            
+            // Función para registrar eventos en el historial
+            function registrarEvento(mensaje) {
+                const timestamp = new Date().toLocaleTimeString();
+                
+                $('#listaEventos').prepend(
+                    `<div class="evento-item evento-dblclick">[${timestamp}] ${mensaje}</div>`
+                );
+                
+                // Actualizar último cambio
+                $('#ultimoCambio').text(timestamp);
+                
+                // Limitar a 8 eventos en el historial
+                if ($('#listaEventos .evento-item').length > 8) {
+                    $('#listaEventos .evento-item:last').remove();
+                }
+            }
+            
+            // Evento dblclick para cambiar el tamaño
+            $('#divInteractivo').dblclick(function() {
+                // Aplicar efecto de transición
+                $(this).addClass('efecto-transicion');
+                
+                if (esGrande) {
+                    // Cambiar a tamaño pequeño (250x250)
+                    $(this)
+                        .removeClass('div-grande')
+                        .addClass('div-pequeno')
+                        .css({
+                            'width': '250px',
+                            'height': '250px',
+                            'background': 'linear-gradient(135deg, #fd79a8, #e84393)'
+                        });
+                    
+                    // Actualizar información
+                    $('#infoTamano').text('250 × 250 px');
+                    $('#tamanoActual').text('Pequeño (250×250)');
+                    $('#anchoActual').text('250px');
+                    $('#altoActual').text('250px');
+                    $('#relacionAspecto').text('1:1');
+                    $('#estadoActual').text('PEQUEÑO').css('color', '#e84393');
+                    
+                } else {
+                    // Cambiar a tamaño grande (800x70)
+                    $(this)
+                        .removeClass('div-pequeno')
+                        .addClass('div-grande')
+                        .css({
+                            'width': '800px',
+                            'height': '70px',
+                            'background': 'linear-gradient(135deg, #74b9ff, #0984e3)'
+                        });
+                    
+                    // Actualizar información
+                    $('#infoTamano').text('800 × 70 px');
+                    $('#tamanoActual').text('Grande (800×70)');
+                    $('#anchoActual').text('800px');
+                    $('#altoActual').text('70px');
+                    $('#relacionAspecto').text('11.43:1');
+                    $('#estadoActual').text('GRANDE').css('color', '#3498db');
+                }
+                
+                // Alternar el estado
+                esGrande = !esGrande;
+                
+                // Actualizar contador
+                contadorDblclick++;
+                $('#contadorDblclick').text(contadorDblclick);
+                
+                // Registrar evento
+                const mensajeEvento = esGrande ? 'Cambió a GRANDE (800×70)' : 'Cambió a PEQUEÑO (250×250)';
+                registrarEvento(mensajeEvento);
+                
+                // Remover efecto de transición después de la animación
+                setTimeout(() => {
+                    $(this).removeClass('efecto-transicion');
+                }, 800);
+            });
+            
+            // Efecto hover mejorado
+            $('#divInteractivo').hover(
+                function() {
+                    $(this).css('transform', 'translateY(-3px) scale(1.02)');
+                },
+                function() {
+                    $(this).css('transform', 'translateY(0px) scale(1)');
+                }
+            );
+            
+            // Prevenir selección de texto en doble clic
+            $('#divInteractivo').on('selectstart', function(e) {
+                e.preventDefault();
+                return false;
+            });
+        });
+    </script>
+</body>
+</html>
