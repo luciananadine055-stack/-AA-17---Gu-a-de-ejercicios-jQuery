@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos mouseover y mouseout en jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .tabla-container {
+            display: inline-block;
+            margin: 30px 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        table {
+            border-collapse: collapse;
+            width: 400px;
+            font-size: 18px;
+            background-color: white;
+        }
+        
+        th, td {
+            border: 3px solid #3498db;
+            padding: 25px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        
+        td {
+            background-color: #ecf0f1;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+        
+        .celda-hover {
+            background-color: #ffeaa7 !important;
+            transform: scale(1.05);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+            border-color: #f39c12 !important;
+            color: #e67e22;
+            font-weight: bold;
+        }
+        
+        .info-panel {
+            background-color: #e8f4fc;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 30px 0;
+            text-align: left;
+        }
+        
+        .estadisticas {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .estadistica-card {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            min-width: 120px;
+            border-top: 4px solid #3498db;
+        }
+        
+        .estadistica-card h3 {
+            margin: 0 0 8px 0;
+            color: #2c3e50;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        
+        .estadistica-card .numero {
+            font-size: 24px;
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .codigo-ejemplo {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            text-align: left;
+            overflow-x: auto;
+        }
+        
+        .instrucciones {
+            background-color: #fff3cd;
+            border: 2px dashed #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+        
+        .colores-demo {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .color-muestra {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid #ddd;
+        }
+        
+        .color-normal {
+            background-color: #ecf0f1;
+        }
+        
+        .color-hover {
+            background-color: #ffeaa7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Eventos mouseover y mouseout en jQuery</h1>
+        <p class="subtitle">Pasa el mouse sobre las celdas para ver el efecto de cambio de color</p>
+        
+        <div class="instrucciones">
+            <h3>🎯 Instrucciones:</h3>
+            <p>Mueve el cursor del mouse sobre cualquier celda de la tabla para activar el efecto.</p>
+            <p>El color cambiará cuando el mouse entre y volverá al original cuando salga.</p>
+        </div>
+        
+        <div class="colores-demo">
+            <div class="color-muestra">
+                <div class="color-box color-normal"></div>
+                <span>Color Normal</span>
+            </div>
+            <div class="color-muestra">
+                <div class="color-box color-hover"></div>
+                <span>Color al pasar el mouse</span>
+            </div>
+        </div>
+        
+        <div class="estadisticas">
+            <div class="estadistica-card">
+                <h3>Celdas Totales</h3>
+                <div class="numero">4</div>
+            </div>
+            <div class="estadistica-card">
+                <h3>Mouse Over</h3>
+                <div class="numero" id="contadorOver">0</div>
+            </div>
+            <div class="estadistica-card">
+                <h3>Mouse Out</h3>
+                <div class="numero" id="contadorOut">0</div>
+            </div>
+        </div>
+        
+        <div class="tabla-container">
+            <table id="tablaInteractiva">
+                <thead>
+                    <tr>
+                        <th>Columna 1</th>
+                        <th>Columna 2</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="celda1">Fila 1 - Celda 1</td>
+                        <td id="celda2">Fila 1 - Celda 2</td>
+                    </tr>
+                    <tr>
+                        <td id="celda3">Fila 2 - Celda 1</td>
+                        <td id="celda4">Fila 2 - Celda 2</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="info-panel">
+            <h3>📊 Información del Evento Actual:</h3>
+            <p><strong>Celda activa:</strong> <span id="celdaActiva">Ninguna</span></p>
+            <p><strong>Estado:</strong> <span id="estadoCelda">Mouse fuera de la tabla</span></p>
+            <p><strong>Tiempo en celda:</strong> <span id="tiempoCelda">0</span> segundos</p>
+        </div>
+        
+        <div class="codigo-ejemplo">
+            <h4>🔧 Código jQuery utilizado:</h4>
+            <pre>
+// Evento mouseover - cuando el mouse entra en la celda
+$('td').mouseover(function() {
+    $(this).addClass('celda-hover');
+    contadorOver++;
+    $('#contadorOver').text(contadorOver);
+    
+    // Actualizar información
+    $('#celdaActiva').text($(this).attr('id'));
+    $('#estadoCelda').text('Mouse DENTRO de la celda').css('color', '#27ae60');
+    
+    // Iniciar temporizador
+    inicioTiempo = new Date();
+});
+
+// Evento mouseout - cuando el mouse sale de la celda
+$('td').mouseout(function() {
+    $(this).removeClass('celda-hover');
+    contadorOut++;
+    $('#contadorOut').text(contadorOut);
+    
+    // Actualizar información
+    $('#estadoCelda').text('Mouse FUERA de la celda').css('color', '#e74c3c');
+    $('#celdaActiva').text('Ninguna');
+    
+    // Calcular tiempo transcurrido
+    if (inicioTiempo) {
+        const tiempoTranscurrido = (new Date() - inicioTiempo) / 1000;
+        $('#tiempoCelda').text(tiempoTranscurrido.toFixed(1));
+    }
+});
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            let contadorOver = 0;
+            let contadorOut = 0;
+            let inicioTiempo = null;
+            let temporizador = null;
+            
+            // Evento mouseover - cuando el mouse entra en la celda
+            $('td').mouseover(function() {
+                // Aplicar clase de hover
+                $(this).addClass('celda-hover');
+                
+                // Actualizar contadores
+                contadorOver++;
+                $('#contadorOver').text(contadorOver);
+                
+                // Actualizar información en panel
+                $('#celdaActiva').text($(this).attr('id'));
+                $('#estadoCelda').text('Mouse DENTRO de la celda').css('color', '#27ae60');
+                
+                // Iniciar temporizador
+                inicioTiempo = new Date();
+                
+                // Actualizar tiempo cada 100ms
+                clearInterval(temporizador);
+                temporizador = setInterval(function() {
+                    if (inicioTiempo) {
+                        const tiempoTranscurrido = (new Date() - inicioTiempo) / 1000;
+                        $('#tiempoCelda').text(tiempoTranscurrido.toFixed(1));
+                    }
+                }, 100);
+            });
+            
+            // Evento mouseout - cuando el mouse sale de la celda
+            $('td').mouseout(function() {
+                // Remover clase de hover
+                $(this).removeClass('celda-hover');
+                
+                // Actualizar contadores
+                contadorOut++;
+                $('#contadorOut').text(contadorOut);
+                
+                // Actualizar información en panel
+                $('#estadoCelda').text('Mouse FUERA de la celda').css('color', '#e74c3c');
+                $('#celdaActiva').text('Ninguna');
+                
+                // Calcular y mostrar tiempo final
+                if (inicioTiempo) {
+                    const tiempoTranscurrido = (new Date() - inicioTiempo) / 1000;
+                    $('#tiempoCelda').text(tiempoTranscurrido.toFixed(1));
+                    inicioTiempo = null;
+                }
+                
+                // Detener temporizador
+                clearInterval(temporizador);
+            });
+            
+            // Efecto adicional para las celdas
+            $('td').on({
+                'mouseenter': function() {
+                    // Efecto sutil de elevación
+                    $(this).css('transform', 'scale(1.02)');
+                },
+                'mouseleave': function() {
+                    // Restaurar transformación
+                    $(this).css('transform', 'scale(1)');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
