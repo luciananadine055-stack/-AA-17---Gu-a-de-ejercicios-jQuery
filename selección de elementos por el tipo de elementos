@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ocultar Elementos Lista</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        ul { list-style: none; padding: 0; }
+        li { padding: 10px; margin: 5px; background: #f0f0f0; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Lista - Ocultar Elementos al Clic</h2>
+    
+    <ul>
+        <li>Elemento 1</li>
+        <li>Elemento 2</li>
+        <li>Elemento 3</li>
+        <li>Elemento 4</li>
+    </ul>
+
+    <script>
+        $(document).ready(function() {
+            // Selección por tipo de elemento y ocultar al hacer clic
+            $("li").click(function() {
+                $(this).hide();
+            });
+        });
+    </script>
+</body>
+</html>
