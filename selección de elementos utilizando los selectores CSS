@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selección de elementos con jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+        }
+        
+        table {
+            width: 45%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f2f2f2;
+        }
+        
+        .table1 tr {
+            cursor: pointer;
+        }
+        
+        .highlighted {
+            background-color: #ffeb3b !important;
+        }
+        
+        .instructions {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Guía de jQuery - Selección de elementos</h1>
+    
+    <div class="instructions">
+        <p><strong>Instrucciones:</strong> Haz clic en cualquier fila de la primera tabla para cambiar su color de fondo.</p>
+    </div>
+    
+    <div class="container">
+        <div>
+            <h2>Tabla 1 (Interactiva)</h2>
+            <table class="table1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Juan Pérez</td>
+                        <td>juan@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>María García</td>
+                        <td>maria@example.com</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>Carlos López</td>
+                        <td>carlos@example.com</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div>
+            <h2>Tabla 2 (No interactiva)</h2>
+            <table class="table2">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>101</td>
+                        <td>Laptop</td>
+                        <td>$800</td>
+                    </tr>
+                    <tr>
+                        <td>102</td>
+                        <td>Mouse</td>
+                        <td>$25</td>
+                    </tr>
+                    <tr>
+                        <td>103</td>
+                        <td>Teclado</td>
+                        <td>$45</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Seleccionar todas las filas de la primera tabla y agregar evento click
+            $('.table1 tbody tr').click(function() {
+                // Alternar la clase 'highlighted' en la fila clickeada
+                $(this).toggleClass('highlighted');
+            });
+        });
+    </script>
+</body>
+</html>
