@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Efecto con método fadeTo en jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            text-align: center;
+            margin-bottom: 30px;
+            font-style: italic;
+        }
+        
+        .bloque-principal {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            border: 3px solid #2d3436;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            opacity: 1;
+        }
+        
+        .bloque-principal:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+        }
+        
+        .bloque-secundario {
+            background: linear-gradient(135deg, #fd79a8, #e84393);
+            border: 3px solid #2d3436;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            color: white;
+            opacity: 0;
+            display: none;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+        }
+        
+        .bloque-principal h2, .bloque-secundario h2 {
+            margin-top: 0;
+            text-align: center;
+            border-bottom: 2px solid rgba(255,255,255,0.3);
+            padding-bottom: 15px;
+        }
+        
+        .parrafo {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        
+        .instrucciones {
+            background-color: #fff3cd;
+            border: 2px dashed #ffeaa7;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .info-panel {
+            background-color: #e8f4fc;
+            border: 2px solid #3498db;
+            border-radius: 10px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        
+        .estado-bloques {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .estado-bloque {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            min-width: 150px;
+            border-top: 4px solid #3498db;
+            text-align: center;
+        }
+        
+        .estado-bloque h3 {
+            margin: 0 0 10px 0;
+            color: #2c3e50;
+            font-size: 16px;
+        }
+        
+        .estado-bloque .estado {
+            font-size: 18px;
+            font-weight: bold;
+            padding: 8px 15px;
+            border-radius: 6px;
+        }
+        
+        .estado-activo {
+            background-color: #d4edda;
+            color: #155724;
+            border: 2px solid #c3e6cb;
+        }
+        
+        .estado-inactivo {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 2px solid #f5c6cb;
+        }
+        
+        .estado-parcial {
+            background-color: #fff3cd;
+            color: #856404;
+            border: 2px solid #ffeaa7;
+        }
+        
+        .estadisticas {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .estadistica-card {
+            background: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            min-width: 120px;
+            border-top: 4px solid #74b9ff;
+            text-align: center;
+        }
+        
+        .estadistica-card h3 {
+            margin: 0 0 8px 0;
+            color: #2c3e50;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        
+        .estadistica-card .numero {
+            font-size: 24px;
+            font-weight: bold;
+            color: #74b9ff;
+        }
+        
+        .codigo-ejemplo {
+            background-color: #2c3e50;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            text-align: left;
+            overflow-x: auto;
+        }
+        
+        .controles {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        
+        .boton-control {
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .boton-control:hover {
+            background: linear-gradient(135deg, #27ae60, #219653);
+            transform: translateY(-2px);
+        }
+        
+        .boton-reset {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .boton-reset:hover {
+            background: linear-gradient(135deg, #c0392b, #a93226);
+        }
+        
+        .animacion-info {
+            text-align: center;
+            margin: 15px 0;
+            font-style: italic;
+            color: rgba(255,255,255,0.9);
+        }
+        
+        .barra-opacidad {
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, rgba(255,255,255,0.2), rgba(255,255,255,0.8));
+            border-radius: 4px;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .indicador-opacidad {
+            height: 100%;
+            background: linear-gradient(90deg, #ffeaa7, #fdcb6e);
+            width: 100%;
+            border-radius: 4px;
+            transition: width 0.1s ease;
+        }
+        
+        .marcas-opacidad {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+        }
+        
+        .marca {
+            width: 2px;
+            height: 100%;
+            background-color: rgba(0,0,0,0.3);
+        }
+        
+        .marca.activa {
+            background-color: #e74c3c;
+        }
+        
+        .explicacion-fadeto {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #fd79a8;
+        }
+        
+        .comparacion-metodos {
+            display: flex;
+            justify-content: space-around;
+            margin: 25px 0;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .metodo-ejemplo {
+            text-align: center;
+            padding: 15px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            min-width: 180px;
+        }
+        
+        .valor-opacidad {
+            font-size: 14px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-top: 5px;
+        }
+        
+        .bloque-transparente {
+            opacity: 0.2 !important;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Efecto con método fadeTo en jQuery</h1>
+        <p class="subtitle">Control preciso de opacidad con fadeTo()</p>
+        
+        <div class="instrucciones">
+            <h3>🎯 Instrucciones:</h3>
+            <p>Haz clic en el <strong>bloque azul</strong> para reducir su opacidad al 20% usando <code>fadeTo()</code>.</p>
+            <p>Cuando alcance opacidad 0.20, aparecerá el <strong>bloque rosa</strong> gradualmente.</p>
+            <p>Observa cómo <code>fadeTo()</code> permite controlar exactamente la opacidad final.</p>
+        </div>
+        
+        <div class="explicacion-fadeto">
+            <h4>💡 ¿Qué hace fadeTo() diferente?</h4>
+            <p><strong>fadeOut()</strong>: Siempre lleva la opacidad a 0 (completamente transparente).</p>
+            <p><strong>fadeIn()</strong>: Siempre lleva la opacidad a 1 (completamente opaco).</p>
+            <p><strong>fadeTo()</strong>: Permite especificar <strong>cualquier valor de opacidad</strong> entre 0 y 1.</p>
+        </div>
+        
+        <div class="estado-bloques">
+            <div class="estado-bloque">
+                <h3>Bloque Principal</h3>
+                <div class="estado estado-activo" id="estadoPrincipal">OPACO (1.0)</div>
+                <div class="valor-opacidad">Opacidad actual: <span id="opacidadPrincipal">1.00</span></div>
+                <div class="barra-opacidad">
+                    <div class="indicador-opacidad" id="indicadorPrincipal" style="width: 100%"></div>
+                    <div class="marcas-opacidad">
+                        <div class="marca" style="margin-left: 0%"></div>
+                        <div class="marca" style="margin-left: 20%"></div>
+                        <div class="marca" style="margin-left: 40%"></div>
+                        <div class="marca" style="margin-left: 60%"></div>
+                        <div class="marca" style="margin-left: 80%"></div>
+                        <div class="marca" style="margin-left: 100%"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="estado-bloque">
+                <h3>Bloque Secundario</h3>
+                <div class="estado estado-inactivo" id="estadoSecundario">OCULTO (0.0)</div>
+                <div class="valor-opacidad">Opacidad actual: <span id="opacidadSecundaria">0.00</span></div>
+                <div class="barra-opacidad">
+                    <div class="indicador-opacidad" id="indicadorSecundario" style="width: 0%"></div>
+                    <div class="marcas-opacidad">
+                        <div class="marca" style="margin-left: 0%"></div>
+                        <div class="marca" style="margin-left: 20%"></div>
+                        <div class="marca" style="margin-left: 40%"></div>
+                        <div class="marca" style="margin-left: 60%"></div>
+                        <div class="marca" style="margin-left: 80%"></div>
+                        <div class="marca" style="margin-left: 100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bloque-principal" id="bloquePrincipal">
+            <h2>🎛️ Bloque Principal - Control de Opacidad</h2>
+            <p class="parrafo">Este bloque utiliza <strong>fadeTo(1000, 0.20)</strong> para reducir gradualmente su opacidad al 20%.</p>
+            <p class="parrafo">A diferencia de fadeOut() que siempre va a opacidad 0, fadeTo() permite detenerse en cualquier valor intermedio.</p>
+            <p class="parrafo">Observa cómo el bloque se vuelve semi-transparente pero sigue siendo visible y ocupando espacio.</p>
+            <p class="parrafo">El método fadeTo() es perfecto para crear efectos de "fantasma" o elementos semi-transparentes.</p>
+            <div class="animacion-info">🎯 Haz clic aquí para activar fadeTo(0.20)</div>
+        </div>
+        
+        <div class="bloque-secundario" id="bloqueSecundario">
+            <h2>🌟 Bloque Revelado</h2>
+            <p class="parrafo">¡Este bloque apareció cuando el principal alcanzó opacidad 0.20!</p>
+            <p class="parrafo">Mientras el bloque principal se mantenía semi-transparente, este bloque se reveló completamente.</p>
+            <p class="parrafo">Esta técnica es útil para crear transiciones donde un elemento se atenúa pero no desaparece completamente.</p>
+            <p class="parrafo">Puedes experimentar con diferentes valores de opacidad usando los controles de abajo.</p>
+            <div class="animacion-info">🎉 ¡Bloque secundario visible!</div>
+        </div>
+        
+        <div class="controles">
+            <button class="boton-control" id="btnReiniciar">Reiniciar a Opaco</button>
+            <button class="boton-control" id="btnAlternarOpacidad">Opacidad: <span id="valorOpacidad">0.20</span></button>
+            <button class="boton-control" id="btnCambiarVelocidad">Velocidad: <span id="velocidadActual">Normal</span></button>
+        </div>
+        
+        <div class="info-panel">
+            <h3>📊 Control de Opacidad con fadeTo():</h3>
+            <div class="estadisticas">
+                <div class="estadistica-card">
+                    <h3>Transiciones</h3>
+                    <div class="numero" id="contadorTransiciones">0</div>
+                </div>
+                <div class="estadistica-card">
+                    <h3>Opacidad Objetivo</h3>
+                    <div class="numero" id="opacidadObjetivo">0.20</div>
+                </div>
+                <div class="estadistica-card">
+                    <h3>Duración</h3>
+                    <div class="numero" id="duracionFade">1000</div>
+                    <small>ms</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparacion-metodos">
+            <div class="metodo-ejemplo">
+                <h4>fadeTo(1000, 0.0)</h4>
+                <p>Equivalente a fadeOut()</p>
+                <p>Opacidad final: 0%</p>
+                <div class="valor-opacidad">Completamente transparente</div>
+            </div>
+            <div class="metodo-ejemplo">
+                <h4>fadeTo(1000, 0.20)</h4>
+                <p>Nuestro caso actual</p>
+                <p>Opacidad final: 20%</p>
+                <div class="valor-opacidad">Semi-transparente</div>
+            </div>
+            <div class="metodo-ejemplo">
+                <h4>fadeTo(1000, 0.5)</h4>
+                <p>Opacidad media</p>
+                <p>Opacidad final: 50%</p>
+                <div class="valor-opacidad">Medianamente visible</div>
+            </div>
+            <div class="metodo-ejemplo">
+                <h4>fadeTo(1000, 1.0)</h4>
+                <p>Equivalente a fadeIn()</p>
+                <p>Opacidad final: 100%</p>
+                <div class="valor-opacidad">Completamente opaco</div>
+            </div>
+        </div>
+        
+        <div class="codigo-ejemplo">
+            <h4>🔧 Código jQuery - Método fadeTo():</h4>
+            <pre>
+// Sintaxis básica de fadeTo
+$(elemento).fadeTo(duracion, opacidad, callback);
+
+// Nuestro caso específico
+$('#bloquePrincipal').fadeTo(1000, 0.20, function() {
+    // Callback que se ejecuta CUANDO se alcanza la opacidad 0.20
+    $('#estadoPrincipal').text('SEMI-TRANSPARENTE (0.20)');
+    
+    // Mostrar el bloque secundario
+    $('#bloqueSecundario').fadeIn(1000, function() {
+        $('#estadoSecundario').text('VISIBLE (1.0)');
+    });
+});
+
+// Ejemplos adicionales
+$('#elemento').fadeTo(500, 0.5);   // 50% de opacidad en 500ms
+$('#elemento').fadeTo(2000, 0.8);  // 80% de opacidad en 2 segundos
+$('#elemento').fadeTo(0, 1.0);     // Opaco inmediatamente
+            </pre>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            let contadorTransiciones = 0;
+            let duracionFade = 1000;
+            let opacidadObjetivo = 0.20;
+            let animacionEnCurso = false;
+            
+            const velocidades = [
+                {nombre: "Rápido", valor: 500},
+                {nombre: "Normal", valor: 1000},
+                {nombre: "Lento", valor: 2000}
+            ];
+            let velocidadIndex = 1;
+            
+            const opacidades = [0.0, 0.10, 0.20, 0.30, 0.50, 0.75];
+            let opacidadIndex = 2; // Empieza en 0.20
+            
+            // Función para actualizar indicadores visuales
+            function actualizarIndicadores() {
+                $('#indicadorPrincipal').css('width', ($('#bloquePrincipal').css('opacity') * 100) + '%');
+                $('#indicadorSecundario').css('width', ($('#bloqueSecundario').css('opacity') * 100) + '%');
+                $('#opacidadPrincipal').text(parseFloat($('#bloquePrincipal').css('opacity')).toFixed(2));
+                $('#opacidadSecundaria').text(parseFloat($('#bloqueSecundario').css('opacity')).toFixed(2));
+            }
+            
+            // Función para iniciar el efecto fadeTo
+            function iniciarFadeTo() {
+                if (animacionEnCurso) return;
+                
+                animacionEnCurso = true;
+                $('#estadoAnimacion').text('FADETO...');
+                
+                // Efecto fadeTo en el bloque principal
+                $('#bloquePrincipal').fadeTo(duracionFade, opacidadObjetivo, function() {
+                    // Callback que se ejecuta CUANDO se alcanza la opacidad objetivo
+                    $('#estadoPrincipal')
+                        .text('SEMI-TRANSPARENTE (' + opacidadObjetivo + ')')
+                        .removeClass('estado-activo')
+                        .addClass('estado-parcial');
+                    
+                    // Aplicar clase para bloque transparente
+                    $(this).addClass('bloque-transparente');
+                    
+                    // Efecto fadeIn en el bloque secundario
+                    $('#bloqueSecundario').fadeIn(duracionFade, function() {
+                        $('#estadoSecundario')
+                            .text('VISIBLE (1.0)')
+                            .removeClass('estado-inactivo')
+                            .addClass('estado-activo');
+                        
+                        contadorTransiciones++;
+                        $('#contadorTransiciones').text(contadorTransiciones);
+                        animacionEnCurso = false;
+                    });
+                });
+                
+                // Actualizar indicadores durante la animación
+                const intervalo = setInterval(actualizarIndicadores, 50);
+                setTimeout(() => clearInterval(intervalo), duracionFade + 100);
+            }
+            
+            // Función para reiniciar los efectos
+            function reiniciarEfectos() {
+                if (animacionEnCurso) {
+                    $('#bloquePrincipal').stop(true, true);
+                    $('#bloqueSecundario').stop(true, true);
+                    animacionEnCurso = false;
+                }
+                
+                // Resetear inmediatamente
+                $('#bloquePrincipal')
+                    .fadeTo(0, 1.0)
+                    .removeClass('bloque-transparente');
+                $('#bloqueSecundario').fadeOut(0);
+                
+                // Actualizar estados
+                $('#estadoPrincipal')
+                    .text('OPACO (1.0)')
+                    .removeClass('estado-parcial estado-inactivo')
+                    .addClass('estado-activo');
+                $('#estadoSecundario')
+                    .text('OCULTO (0.0)')
+                    .removeClass('estado-activo estado-parcial')
+                    .addClass('estado-inactivo');
+                
+                actualizarIndicadores();
+            }
+            
+            // Función para cambiar opacidad objetivo
+            function cambiarOpacidad() {
+                opacidadIndex = (opacidadIndex + 1) % opacidades.length;
+                opacidadObjetivo = opacidades[opacidadIndex];
+                $('#opacidadObjetivo').text(opacidadObjetivo);
+                $('#valorOpacidad').text(opacidadObjetivo);
+            }
+            
+            // Función para cambiar velocidad
+            function cambiarVelocidad() {
+                velocidadIndex = (velocidadIndex + 1) % velocidades.length;
+                const velocidad = velocidades[velocidadIndex];
+                duracionFade = velocidad.valor;
+                $('#duracionFade').text(duracionFade);
+                $('#velocidadActual').text(velocidad.nombre);
+            }
+            
+            // Eventos
+            $('#bloquePrincipal').click(function() {
+                iniciarFadeTo();
+            });
+            
+            $('#btnReiniciar').click(function() {
+                reiniciarEfectos();
+            });
+            
+            $('#btnAlternarOpacidad').click(function() {
+                cambiarOpacidad();
+            });
+            
+            $('#btnCambiarVelocidad').click(function() {
+                cambiarVelocidad();
+            });
+            
+            // Actualizar indicadores en tiempo real
+            setInterval(actualizarIndicadores, 100);
+            
+            // Inicialización
+            $('#opacidadObjetivo').text(opacidadObjetivo);
+            $('#duracionFade').text(duracionFade);
+            actualizarIndicadores();
+        });
+    </script>
+</body>
+</html>
