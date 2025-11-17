@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>jQuery Click</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .parrafo { padding: 20px; margin: 10px; border: 2px solid #ccc; cursor: pointer; }
+        #p1 { background: lightblue; }
+        #p2 { background: lightyellow; }
+    </style>
+</head>
+<body>
+    <h2>jQuery - Click en Primer Párrafo</h2>
+    
+    <p class="parrafo" id="p1">Primer párrafo (haz clic)</p>
+    <p class="parrafo" id="p2">Segundo párrafo (sin evento)</p>
+
+    <script>
+        $(document).ready(function() {
+            // jQuery - Capturar click solo del primer párrafo
+            $("#p1").click(function() {
+                alert("¡Clic en primer párrafo!");
+            });
+        });
+    </script>
+</body>
+</html>
