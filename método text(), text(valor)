@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Método text() en jQuery</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f8f9fa;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+        
+        table {
+            width: 45%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        th, td {
+            border: 2px solid #3498db;
+            padding: 12px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .tabla1 td {
+            background-color: #e8f4fc;
+        }
+        
+        .tabla2 td {
+            background-color: #f0f8f0;
+        }
+        
+        .botones-container {
+            text-align: center;
+            margin: 30px 0;
+        }
+        
+        .btn-cambiar {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-cambiar:hover {
+            background-color: #c0392b;
+        }
+        
+        .btn-restaurar {
+            background-color: #2ecc71;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            margin-left: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .btn-restaurar:hover {
+            background-color: #27ae60;
+        }
+        
+        .info {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Método text() en jQuery</h1>
+    
+    <div class="container">
+        <div>
+            <h2>Tabla 1 (Modificable)</h2>
+            <table class="tabla1">
+                <thead>
+                    <tr>
+                        <th>Columna A</th>
+                        <th>Columna B</th>
+                        <th>Columna C</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Fila 1 - A</td>
+                        <td>Fila 1 - B</td>
+                        <td>Fila 1 - C</td>
+                    </tr>
+                    <tr>
+                        <td>Fila 2 - A</td>
+                        <td>Fila 2 - B</td>
+                        <td>Fila 2 - C</td>
+                    </tr>
+                    <tr>
+                        <td>Fila 3 - A</td>
+                        <td>Fila 3 - B</td>
+                        <td>Fila 3 - C</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        <div>
+            <h2>Tabla 2 (Intacta)</h2>
+            <table class="tabla2">
+                <thead>
+                    <tr>
+                        <th>Columna X</th>
+                        <th>Columna Y</th>
+                        <th>Columna Z</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Fila 1 - X</td>
+                        <td>Fila 1 - Y</td>
+                        <td>Fila 1 - Z</td>
+                    </tr>
+                    <tr>
+                        <td>Fila 2 - X</td>
+                        <td>Fila 2 - Y</td>
+                        <td>Fila 2 - Z</td>
+                    </tr>
+                    <tr>
+                        <td>Fila 3 - X</td>
+                        <td>Fila 3 - Y</td>
+                        <td>Fila 3 - Z</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <div class="botones-container">
+        <button class="btn-cambiar" id="btn-cambiar">Cambiar Contenido Tabla 1</button>
+        <button class="btn-restaurar" id="btn-restaurar">Restaurar Contenido Original</button>
+    </div>
+    
+    <div class="info">
+        <p>Al hacer clic en "Cambiar Contenido Tabla 1", solo se modificará el texto de la primera tabla.</p>
+        <p>La segunda tabla permanecerá intacta en todo momento.</p>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // Guardar el contenido original de la tabla 1
+            const contenidoOriginal = [];
+            $('.tabla1 tbody tr').each(function(filaIndex) {
+                contenidoOriginal[filaIndex] = [];
+                $(this).find('td').each(function(colIndex) {
+                    contenidoOriginal[filaIndex][colIndex] = $(this).text();
+                });
+            });
+            
+            // Botón para cambiar contenido de la tabla 1
+            $('#btn-cambiar').click(function() {
+                $('.tabla1 tbody tr').each(function(filaIndex) {
+                    $(this).find('td').each(function(colIndex) {
+                        // Cambiar el texto según la posición
+                        const nuevosTextos = [
+                            ['Nuevo A1', 'Nuevo B1', 'Nuevo C1'],
+                            ['Nuevo A2', 'Nuevo B2', 'Nuevo C2'],
+                            ['Nuevo A3', 'Nuevo B3', 'Nuevo C3']
+                        ];
+                        $(this).text(nuevosTextos[filaIndex][colIndex]);
+                    });
+                });
+                
+                // Cambiar color de fondo temporalmente para mostrar el cambio
+                $('.tabla1 td').css('background-color', '#ffeaa7');
+                setTimeout(function() {
+                    $('.tabla1 td').css('background-color', '#e8f4fc');
+                }, 1000);
+            });
+            
+            // Botón para restaurar contenido original
+            $('#btn-restaurar').click(function() {
+                $('.tabla1 tbody tr').each(function(filaIndex) {
+                    $(this).find('td').each(function(colIndex) {
+                        $(this).text(contenidoOriginal[filaIndex][colIndex]);
+                    });
+                });
+                
+                // Efecto visual de restauración
+                $('.tabla1 td').css('background-color', '#a3e4d7');
+                setTimeout(function() {
+                    $('.tabla1 td').css('background-color', '#e8f4fc');
+                }, 1000);
+            });
+        });
+    </script>
+</body>
+</html>
